@@ -205,40 +205,6 @@ h3 {
   gap: 12px;
 }
 
-.hero-panel {
-  position: absolute;
-  right: clamp(18px, 5vw, 70px);
-  bottom: 34px;
-  z-index: 3;
-  width: min(380px, calc(100% - 36px));
-  display: grid;
-  gap: 1px;
-  overflow: hidden;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(18px);
-}
-
-.hero-panel div {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 16px 18px;
-  background: rgba(16, 20, 23, 0.62);
-}
-
-.hero-panel span {
-  color: rgba(255, 255, 255, 0.68);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.hero-panel strong {
-  text-align: right;
-}
-
 @media (min-width: 981px) {
   .hero {
     min-height: 88vh;
@@ -324,11 +290,6 @@ h3 {
     width: min(52vw, 760px);
   }
 
-  .hero-panel {
-    left: clamp(18px, 5vw, 70px);
-    right: auto;
-    width: min(460px, 48vw);
-  }
 }
 
 section:not(.hero) {
@@ -374,6 +335,18 @@ section:not(.hero) {
 .booking-copy p {
   color: var(--muted);
   line-height: 1.65;
+}
+
+.promo-section {
+  padding: clamp(28px, 5vw, 58px) clamp(18px, 5vw, 70px);
+  background: #080b0d;
+}
+
+.promo-section img {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
 }
 
 .routes-section {
@@ -666,13 +639,6 @@ textarea {
     padding-bottom: 230px;
   }
 
-  .hero-panel {
-    left: 18px;
-    right: 18px;
-    bottom: 26px;
-    width: auto;
-  }
-
   .intro-section,
   .experience-section,
   .booking-section {
@@ -714,15 +680,6 @@ textarea {
   .hero {
     padding-left: 16px;
     padding-right: 16px;
-  }
-
-  .hero-panel div {
-    display: grid;
-    gap: 4px;
-  }
-
-  .hero-panel strong {
-    text-align: left;
   }
 
   .hero-actions,
