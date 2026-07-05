@@ -133,6 +133,9 @@ a {
 
 .hero-media {
   object-fit: cover;
+  filter: contrast(1.08) saturate(1.14) brightness(0.94);
+  transform: scale(1.015);
+  transform-origin: center;
 }
 
 .hero-overlay {
