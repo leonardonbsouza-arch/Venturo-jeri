@@ -12,6 +12,10 @@
       "dest": "/index.html"
     },
     {
+      "src": "/venturoexperience/?",
+      "dest": "/instagram.html"
+    },
+    {
       "handle": "filesystem"
     }
   ]
