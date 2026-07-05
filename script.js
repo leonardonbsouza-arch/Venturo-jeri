@@ -1,5 +1,6 @@
 const bookingForm = document.querySelector("#booking-form");
-const whatsappLink = document.querySelector("#whatsapp-link");
+const bookingSubmit = document.querySelector("#booking-submit");
+const formStatus = document.querySelector("#form-status");
 const routeInput = document.querySelector("#route");
 const dateInput = document.querySelector("#date");
 const timeInput = document.querySelector("#time");
@@ -8,37 +9,85 @@ const notesInput = document.querySelector("#notes");
 const lightbox = document.querySelector("#lightbox");
 const lightboxImage = lightbox.querySelector("img");
 const whatsappNumber = "";
+const supabaseUrl = "";
+const supabaseAnonKey = "";
+
+function isSupabaseConfigured() {
+  return Boolean(supabaseUrl && supabaseAnonKey);
+}
+
+function getBookingPayload() {
+  return {
+    route: routeInput.value,
+    preferred_date: dateInput.value || null,
+    preferred_time: timeInput.value || null,
+    customer_name: nameInput.value.trim() || null,
+    notes: notesInput.value.trim() || null,
+    source: "venturojeri.com",
+  };
+}
 
 function buildMessage() {
-  const route = routeInput.value;
-  const date = dateInput.value || "data a combinar";
-  const time = timeInput.value || "horario a combinar";
-  const name = nameInput.value.trim() || "Cliente";
-  const notes = notesInput.value.trim();
+  const payload = getBookingPayload();
+  const date = payload.preferred_date || "data a combinar";
+  const time = payload.preferred_time || "horario a combinar";
+  const name = payload.customer_name || "Cliente";
 
   const lines = [
     `Ola, sou ${name}. Quero reservar um passeio Venturo Jeri Offroad.`,
-    `Roteiro: ${route}`,
+    `Roteiro: ${payload.route}`,
     `Data: ${date}`,
     `Horario: ${time}`,
   ];
 
-  if (notes) {
-    lines.push(`Observacoes: ${notes}`);
+  if (payload.notes) {
+    lines.push(`Observacoes: ${payload.notes}`);
   }
 
   return lines.join("\n");
 }
 
-function updateWhatsappLink() {
-  const message = encodeURIComponent(buildMessage());
+function buildWhatsappUrl() {
   const target = whatsappNumber ? `/${whatsappNumber}` : "";
-  whatsappLink.href = `https://wa.me${target}?text=${message}`;
+  return `https://wa.me${target}?text=${encodeURIComponent(buildMessage())}`;
 }
 
-bookingForm.addEventListener("input", updateWhatsappLink);
-bookingForm.addEventListener("change", updateWhatsappLink);
-updateWhatsappLink();
+async function saveLead() {
+  if (!isSupabaseConfigured()) {
+    return;
+  }
+
+  const response = await fetch(`${supabaseUrl}/rest/v1/booking_leads`, {
+    method: "POST",
+    headers: {
+      apikey: supabaseAnonKey,
+      Authorization: `Bearer ${supabaseAnonKey}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify(getBookingPayload()),
+  });
+
+  if (!response.ok) {
+    throw new Error("Nao foi possivel salvar a reserva.");
+  }
+}
+
+bookingForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  bookingSubmit.disabled = true;
+  formStatus.textContent = isSupabaseConfigured() ? "Registrando seu pedido..." : "Abrindo WhatsApp...";
+
+  try {
+    await saveLead();
+    formStatus.textContent = "Pedido registrado. Abrindo WhatsApp...";
+  } catch (error) {
+    formStatus.textContent = "Nao consegui registrar no sistema, mas vou abrir o WhatsApp.";
+  } finally {
+    window.open(buildWhatsappUrl(), "_blank", "noreferrer");
+    bookingSubmit.disabled = false;
+  }
+});
 
 document.querySelectorAll(".gallery-item").forEach((item) => {
   item.addEventListener("click", () => {

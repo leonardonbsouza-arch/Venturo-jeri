@@ -28,3 +28,21 @@ O botao de reserva monta uma mensagem pronta. Quando tiver o telefone oficial, a
 ```js
 https://wa.me/5588999999999?text=${message}
 ```
+
+## Supabase
+
+O formulario pode salvar cada pedido na tabela `booking_leads` antes de abrir o WhatsApp.
+
+1. No Supabase, abra **SQL Editor**.
+2. Execute o arquivo `supabase/schema.sql`.
+3. Em **Project Settings > API**, copie:
+   - Project URL
+   - anon public key
+4. Preencha essas constantes em `script.js`:
+
+```js
+const supabaseUrl = "https://seu-projeto.supabase.co";
+const supabaseAnonKey = "sua-anon-public-key";
+```
+
+Com essas duas constantes vazias, o site continua funcionando normalmente e apenas abre o WhatsApp.
